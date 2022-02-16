@@ -15,5 +15,11 @@
     <p class = 'infoPara'><%=sightingEntry[sightingEntry.keys[i]]%></p>
     <% } %>
   </div>
+  <div class = buttonsWrapper>
+    <form>
+    <button class ='entryButtons'> <a href ='/sighting/<%=sightingEntry.indexNo%>/edit'>Edit</a></button>
+     <button class ='entryButtons' type='submit' formaction="/sighting/<%=sightingEntry.indexNo%>?_method=DELETE" formmethod= 'post'>Delete</button>
+    </form>
+  </div>
 </body>
 </html>
