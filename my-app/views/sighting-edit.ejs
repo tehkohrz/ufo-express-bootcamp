@@ -1,20 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Sighting <%=sightingEntry.indexNo%> Edit</title>
-</head>
-<body>
-  <div class='title'>Edit Sighting <%=sightingEntry.indexNo%></div>
-  <form action='/sighting/<%=sightingEntry.indexNo%> >/?_method=PUT' method='POST'>
-    <% for (let i=0; i < sightingEntry.keys.length; i+=1) { %>
-    <label class  = 'infoLabel' for ='<%=sightingEntry.keys[i]%>'><%= sightingEntry.keys[i].toUpperCase().replace('_', ' ') %>:</label>
-    <input class = 'infoInput' type = 'text' id = '<%=sightingEntry.keys[i]%>' value = '<%=sightingEntry[sightingEntry.keys[i]]%>' />
+<%- include('nav-header', {titleName:'Edit Sightings', tabStatus:['nav-link active', 'nav-link','nav-link','nav-link','nav-link','nav-link']}) %>
+
+<div class='titleHeader'>Edit Sighting <%=indexNo%></div>
+<div class="container">
+  <form action='/sighting/<%=indexNo%>/edit?_method=PUT' method='POST'>
+    <% for (const [key,value] of Object.entries(sightingEntry)) { %>
+    <div class="form-group">
+      <label class='infoLabel col-4' for='<%=key%>'><%= key.toUpperCase().replace('_', ' ') %>:</label>
+      <% if(key === 'text' || key ==='summary') { %>
+        <textarea class ='infoInput col-12' rows="5"><%=value%></textarea>
+        <%} else { %>
+      <input class='infoInput col-12' type='text' id='<%=key%>' value='<%=value%>' />
+      <%}%>
+    </div>
     <% } %>
-    <input type='submit' value = 'Submit' />
+    <button class='entryButtons' type='submit'>Submit</button>
+    <button class ='entryButtons' type='submit' formaction="/sighting/<%=indexNo%>?_method=DELETE" formmethod= 'post'>Delete</button>
   </form>
+</div>
 </body>
+
 </html>

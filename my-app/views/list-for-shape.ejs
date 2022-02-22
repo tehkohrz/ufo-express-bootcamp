@@ -1,0 +1,12 @@
+<%- include('nav-header', {titleName: 'UFO Shapes', tabStatus:['nav-link', 'nav-link active','nav-link','nav-link','nav-link','nav-link']}) %> 
+
+  <div class="wrapper">
+    <div class="titleHeader">Sightings of <%=shape%> UFO</div>
+    <ul>
+    <% for(let i=0; i<filteredData.length; i+=1) { %>
+      <li><a href ='/sighting/<%=filteredData[i].indexNo%>'> Sighting <%=filteredData[i].indexNo%></a></li>
+    <%}%>
+    </ul>
+  </div>
+</body>
+</html>

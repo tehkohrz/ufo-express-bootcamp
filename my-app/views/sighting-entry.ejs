@@ -1,25 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Sighting <%=sightingEntry.indexNo%> </title>
-</head>
-<body>
-  <div class='title'>Sighting <%=sightingEntry.indexNo%></div>
-  <div class='mainInfo'>
+<%- include('nav-header', {titleName:'UFO Sightings', tabStatus:['nav-link active', 'nav-link','nav-link','nav-link','nav-link','nav-link']}) %> 
+  <div class="wrapper">
+<div class='titleHeader'>Sighting <%=sightingEntry.indexNo%></div>
+  <div class=' container mainInfo'>
     <% for (let i=0; i < sightingEntry.keys.length; i+=1) { %>
     <div class  = 'infoTitle'><%= sightingEntry.keys[i].toUpperCase().replace('_', ' ') %>:</div>
     <p class = 'infoPara'><%=sightingEntry[sightingEntry.keys[i]]%></p>
     <% } %>
   </div>
-  <div class = buttonsWrapper>
+  <div class = container buttonsWrapper>
     <form>
-    <button class ='entryButtons'> <a href ='/sighting/<%=sightingEntry.indexNo%>/edit'>Edit</a></button>
+    <button class ='entryButtons' formaction="/sighting/<%=sightingEntry.indexNo%>/edit">Edit</button>
      <button class ='entryButtons' type='submit' formaction="/sighting/<%=sightingEntry.indexNo%>?_method=DELETE" formmethod= 'post'>Delete</button>
     </form>
+  </div>
   </div>
 </body>
 </html>

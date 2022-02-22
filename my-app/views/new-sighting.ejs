@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('nav-header', {titleName:'UFO Sightings', tabStatus:['nav-link', 'nav-link','nav-link','nav-link','nav-link','nav-link active']}) %> 
+  
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Sighting</title>
-</head>
-
-<body>
-  <h1>New Sighting</h1>
+<div class="wrapper">
+  <div class="titleHeader">New Sighting</div>
   <% if (submitted) {%> 
     <h2>Sighting submitted!</h2>
     <% } %>
@@ -31,6 +23,7 @@
     <input type="text" id="summary" name="summary" /><br />
     <button type="submit">Submit</button>
   </form>
+  </div>
 </body>
 
 </html>

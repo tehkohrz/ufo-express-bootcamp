@@ -1,11 +1,85 @@
 .title {
   font-size: 50px;
 }
+
 .infoTitle {
   font-size: 20px;
   font-weight: bold;
   text-decoration-line: underline;
 }
+
 .infoPara {
   color: brown;
+}
+
+.wrapper {
+  padding: 5px;
+}
+
+body {
+  background-image: url('https://www.dcbuilding.com/wp-content/uploads/2020/10/papyrus-dark.png');
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+.nav-item {
+  font-size: 25px;
+  color: white;
+}
+
+a:hover {
+  color: lime;
+}
+
+.active {
+  color: lime;
+  text-decoration: underline;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar {
+  border-style: solid;
+  border-color: limegreen;
+  background-color: rgba(24, 24, 24, 0.828);
+}
+
+.dropdown-container {
+  padding-left:20px;
+}
+
+#dropdownSortButton {
+  color: limegreen;
+  background-color: black;
+  border-color: lime;
+}
+.dropdown-menu{
+  background-color: limegreen;
+}
+.list-item {
+  text-decoration: none;
+  color: limegreen;
+  font-size: 1.5rem;
+  margin-top: 10px;
+}
+.titleHeader {
+  font-size: 2rem;
+  color: limegreen;
+  text-decoration: underline;
+  font-weight: 700;
+  padding-left: 20px;
+}
+.entryButtons{
+  background-color: limegreen;
+  color: black;
+  border: none;
+  font-weight: bold;
+}
+.infoTitle, .infoLabel {
+  color: white;
+  font-weight: bold;
+}
+.x-scroll-disabled {
+	overflow-x: hidden;
 }

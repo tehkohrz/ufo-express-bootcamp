@@ -1,19 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel='stylesheet' href="styles.css">
-  <title>UFO Sightings</title>
-</head>
-<body>
-  <div>
-    <h1>List of UFO Sightings</h1>
-    <ul>
+<!-- Pump the object here to set the active tab for the nav bar -->
+<%- include('nav-header', {titleName:'UFO Sightings', tabStatus:['nav-link active', 'nav-link','nav-link','nav-link','nav-link','nav-link']}) %>
+
+<div class="wrapper">
+  <div class="row d-flex justify-content-start">
+    <div class='titleHeader col-md-6'>List of UFO Sightings</div>
+    <!-- Dropdown sorter -->
+    <div class="dropdown-container d-flex justify-content col-sm-6">
+      <div class="btn-group dropdown">
+        <button type="button" class="btn btn-secondary dropdown-toggle" id='dropdownSortButton' data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          Sort By
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownButton">
+          <% const sorterKey = Object.keys(availableSorts) %>
+          <% for(let i=0; i<sorterKey.length; i+=1){ %>
+          <a class="dropdown-item" href="/?sortBy=<%=sorterKey[i]%>"><%=availableSorts[sorterKey[i]]%></a>
+          <%}%>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- List of sightings -->
+  <ul>
     <% for(let i=0; i<noOfSightings; i+=1) { %>
-      <li><a href ='/sighting/<%=i%>'>Sightings <%= i %></a></li>
-    <%}%>
+          <li class="row">
+            <div class="col-6">
+              <a class='list-item' href='/sighting/<%=renderedData[i].originalIndex%>'>Sightings
+                <%= renderedData[i].originalIndex %></a>
+            </div>
+            <% if (!(renderedData[i].entryDate == undefined)){ %>
+            <div class="col-4">
+              <%= renderedData[i].entryDate %>
+            </div>
+            <%} else { %>
+            
+              <%}%>
+                <div class="col-2">
+            <form style="padding: 5px" ><button class='entryButtons' type='submit'
+                formaction="/sighting/<%=renderedData[i].originalIndex%>?_method=DELETE"
+            formmethod='post'>Delete</button></form>
+        </div>
+        </li>
+        <%}%>
     </ul>
   </div>
 </body>
