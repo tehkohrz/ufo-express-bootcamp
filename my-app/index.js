@@ -219,7 +219,7 @@ app.get('/shapes/:shape', (request, response) => {
   jsStore.read('data.json', readhandler);
 });
 
-app.listen(3004);
+app.listen(80);
 
 // FUNCTIONS MISC
 
