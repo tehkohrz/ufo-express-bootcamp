@@ -1,29 +1,36 @@
-<%- include('nav-header', {titleName:'UFO Sightings', tabStatus:['nav-link', 'nav-link','nav-link','nav-link','nav-link','nav-link active']}) %> 
-  
+<%- include('nav-header', {titleName:'UFO Sightings', tabStatus:['nav-link', 'nav-link','nav-link','nav-link','nav-link','nav-link active']}) %>
+
 
 <div class="wrapper">
   <div class="titleHeader">New Sighting</div>
-  <% if (submitted) {%> 
-    <h2>Sighting submitted!</h2>
-    <% } %>
-  <form action='/sighting' method='POST'>
-    <label for="text">Text:</label><br />
-    <input type="text" id="text" name="text" /><br />
-    <label for="date_time">Date & Date & Time:</label><br />
-    <input type="datetime" id="date_time" name="date_time" /><br />
-    <label for="city">City:</label><br />
-    <input type="text" id="city" name="city" /><br />
-    <label for="state">State:</label><br />
-    <input type="text" id="state" name="state" /><br />
-    <label for="shape">Shape:</label><br />
-    <input type="text" id="shape" name="shape" /><br />
-    <label for="duration">Duration:</label><br />
-    <input type="text" id="duration" name="duration" /><br />
-    <label for="summary">Summary:</label><br />
-    <input type="text" id="summary" name="summary" /><br />
-    <button type="submit">Submit</button>
-  </form>
+  <% if (submitted && validEntry) {%>
+  <div class="titleHeader">Sighting Submitted!</div>
+  <% } %>
+  <form class='form-group' action='/sighting' method='POST'>
+    <div class="'container" style="padding:20px; ">
+      <% for (const [key,value] of Object.entries(sightingTemplate)) {%>
+      <div class="row">
+        <label class='infoLabel' for="<%=key%>"> <%=value[0]%> </label>
+      </div>
+      <!-- Not a valid entry and needs to retain the input in the form -->
+      <div class="row">
+        <% let inputValue = ''; %>
+        <% if (!(validEntry) && submitted) {%>
+        <%  inputValue = entry[key]; %>
+        <%}%>
+           <% if (key == 'summary'|| key == 'text') {%>
+        <textarea class='infoInput col-10' rows='5' id="<%=key%>" name="<%=key%>"><%=inputValue%></textarea>
+        <%} else {%>
+        <input class="infoInput col-10" type="<%=value[1]%>" id="<%=key%>" name="<%=key%>" value='<%=inputValue%>' />
+        <% } %>
+      </div>
+      <% } %>
+      <div class="row">
+      <button class='entryButtons' type="submit">Submit</button>
+    </div>
   </div>
+  </form>
+</div>
 </body>
 
 </html>

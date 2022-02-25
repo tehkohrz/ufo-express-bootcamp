@@ -4,7 +4,7 @@
     <div class="titleHeader">Sightings of <%=shape%> UFO</div>
     <ul>
     <% for(let i=0; i<filteredData.length; i+=1) { %>
-      <li><a href ='/sighting/<%=filteredData[i].indexNo%>'> Sighting <%=filteredData[i].indexNo%></a></li>
+      <li><a class = 'list-item' href ='/sighting/<%=filteredData[i].indexNo%>'> Sighting <%=filteredData[i].indexNo%></a></li>
     <%}%>
     </ul>
   </div>

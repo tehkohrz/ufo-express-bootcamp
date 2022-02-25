@@ -29,17 +29,19 @@
                 <%= renderedData[i].originalIndex %></a>
             </div>
             <% if (!(renderedData[i].entryDate == undefined)){ %>
-            <div class="col-4">
+            <div class="col-4 infoLabel">
               <%= renderedData[i].entryDate %>
             </div>
             <%} else { %>
-            
+            <div class="col-4">
+             
+            </div>
               <%}%>
-                <div class="col-2">
+                <div class="col-sm-2">
             <form style="padding: 5px" ><button class='entryButtons' type='submit'
                 formaction="/sighting/<%=renderedData[i].originalIndex%>?_method=DELETE"
             formmethod='post'>Delete</button></form>
-        </div>
+        </div> 
         </li>
         <%}%>
     </ul>

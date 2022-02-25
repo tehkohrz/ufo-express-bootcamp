@@ -113,6 +113,30 @@ export function add(filename, key, input, callback) {
   );
 }
 
+// Delete entry within an array
+export function delArray(filename, objectKey, index) {
+  edit(filename, (err, jsonContentObj) => {
+    if (err) {
+      console.error('Delete error', err);
+      callback(err);
+      return;
+    }
+    jsonContentObj[objectKey].splice(index, 1);
+  }, () => {});
+}
+
+// Delete entry within an array
+export function delObject(filename, key) {
+  edit(filename, (err, jsonContentObj) => {
+    if (err) {
+      console.error('Delete error', err);
+      callback(err);
+      return;
+    }
+    delete jsonContentObj[key];
+  }, () => {});
+}
+
 export default {
-  read, add, edit, write,
+  read, add, edit, write, delArray, delObject,
 };

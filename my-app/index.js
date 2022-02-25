@@ -1,32 +1,34 @@
 import express from 'express';
 import methodOverride from 'method-override';
-
-import {
-  fileURLToPath,
-} from 'url';
-import path, {
-  dirname,
-} from 'path';
+import cookieParser from 'cookie-parser';
 
 import jsStore from './jsonFileStorage.js';
-
-// File paths
-const __dirname = path.resolve();
 
 const app = express();
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-// app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({
   extended: false,
 }));
+app.use(cookieParser());
 app.use(methodOverride('_method'));
 
+// templates
 const availableSorts = {
   date_time: 'Date & Time',
   shape: 'Shape',
   city: 'City',
   state: 'State',
+};
+
+const sightingTemplate = {
+  text: ['Text', 'text'],
+  date_time: ['Date & Time', 'datetime-local'],
+  city: ['City', 'text'],
+  state: ['State', 'text'],
+  shape: ['Shape', 'text'],
+  duration: ['Duration', 'text'],
+  summary: ['Summary', 'text'],
 };
 
 // NO EXTENSION
@@ -46,6 +48,8 @@ app.get('/', (request, response) => {
       renderedData = sortedData;
     }
     const noOfSightings = renderedData.length;
+    visitCounter(request, response);
+
     response.render('main', {
       noOfSightings,
       renderedData,
@@ -59,21 +63,37 @@ app.get('/', (request, response) => {
 // /SIGHTINGS SECTION
 // Render an empty form to key in a new sighting
 app.get('/sighting', (request, response) => {
+  visitCounter(request, response);
   response.render('new-sighting', {
     submitted: false,
+    validEntry: false,
+    sightingTemplate,
   });
 });
 
 app.post('/sighting', (request, response) => {
   request.body.entryDate = Date().slice(0, 24);
-  jsStore.add('data.json', 'sightings', request.body, (err) => {
-    if (err) {
-      response.status(500).send('DB write error.');
-    }
-  });
-  response.render('new-sighting', {
-    submitted: true,
-  });
+  const validEntry = validateForm(request.body);
+  if (validEntry) {
+    jsStore.add('data.json', 'sightings', request.body, (err) => {
+      if (err) {
+        response.status(500).send('DB write error.');
+      }
+    });
+    response.render('new-sighting', {
+      submitted: true,
+      validEntry,
+      sightingTemplate,
+    });
+  } else {
+    const entry = request.body;
+    response.render('new-sighting', {
+      submitted: true,
+      entry,
+      validEntry,
+      sightingTemplate,
+    });
+  }
 });
 
 // /SIGHTING/:INDEX SECTION
@@ -88,6 +108,7 @@ app.get('/sighting/:index', (request, response) => {
     };
     sightingEntry.keys = Object.keys(sightingEntry);
     sightingEntry.indexNo = index;
+    visitCounter(request, response);
     response.render('sighting-entry', {
       sightingEntry,
     });
@@ -105,8 +126,12 @@ app.get('/sighting/:index/edit', (request, response) => {
       ...data.sightings[index],
     };
     const indexNo = index;
+    visitCounter(request, response);
     response.render('sighting-edit', {
-      sightingEntry, indexNo,
+      sightingEntry,
+      indexNo,
+      sightingTemplate,
+      validInput: true,
     });
   }
   jsStore.read('data.json', readhandler);
@@ -118,34 +143,37 @@ app.put('/sighting/:index/edit', (request, response) => {
   const {
     index,
   } = request.params;
+
   const sightingEntry = request.body;
+  console.log(sightingEntry);
 
   function readhandler(error, data) {
-    console.log(request.body);
-
     data.sightings[index] = request.body;
-    jsStore.write('data.json', data, (err) => {
-    });
-    response.redirect(`/sighting/${index}`);
+    const validInput = validateForm(request.body);
+    if (validInput) {
+      jsStore.write('data.json', data, (err) => {});
+      response.redirect(`/sighting/${index}`);
+    } else {
+      // Render the same content without resetting
+      const indexNo = index;
+      response.render('sighting-edit', {
+        sightingEntry,
+        indexNo,
+        validInput,
+        sightingTemplate,
+      });
+    }
   }
   jsStore.read('data.json', readhandler);
 });
 
 // Delete Entry
 app.delete('/sighting/:index', (request, response) => {
-  function readhander(error, data) {
-    const {
-      index,
-    } = request.params;
-    data.sightings.splice(index, 1);
-    const noOfSightings = data.sightings.length;
-    jsStore.write('data.json', data, (err) => {
-      console.log('Deleted entry');
-    });
-    // response.render('main', { noOfSightings });
-    response.redirect('/');
-  }
-  jsStore.read('data.json', readhander);
+  const {
+    index,
+  } = request.params;
+  jsStore.delArray('data.json', 'sightings', index);
+  response.redirect('/');
 });
 
 // SHAPES SECTION
@@ -173,7 +201,7 @@ app.get('/shapes/:shape', (request, response) => {
     shape,
   } = request.params;
 
-  function readhander(error, data) {
+  function readhandler(error, data) {
     const filteredData = data.sightings.filter((entry, index) => {
       if (entry.shape === shape) {
         const foundEntry = entry;
@@ -182,14 +210,61 @@ app.get('/shapes/:shape', (request, response) => {
       }
     });
     console.log(filteredData);
-    w;
-
+    visitCounter(request, response);
     response.render('list-for-shape', {
       filteredData,
       shape,
     });
   }
-  jsStore.read('data.json', readhander);
+  jsStore.read('data.json', readhandler);
 });
 
 app.listen(3004);
+
+// FUNCTIONS MISC
+
+// function to validate the data entered for the entry
+// @param entry {object} of the sighting entry
+function validateForm(entry) {
+  // Date time validation check if its future entry
+  if (Date.parse(entry.date_time) > Date.now()) {
+    return false;
+  }
+  return true;
+}
+
+// Function that updates the visit cookie and send it back to the cilent
+function visitCounter(request, response) {
+  // initialising counter if no previous visits
+  if (request.cookies.visitCount == undefined) {
+    response.cookie('visitCount', 1);
+    const currentDate = new Date();
+    const lastUpdate = {
+      day: currentDate.getDate(),
+      month: currentDate.getMonth(),
+      year: currentDate.getYear(),
+    };
+    response.cookie('lastUpdate', lastUpdate);
+    return;
+  }
+  console.log('checking cookie', request.cookies.lastUpdate);
+
+  // Check last visit update and update if its not the same date
+  if (dateCheck(request.cookies.lastUpdate)) {
+    let visits = Number(request.cookies.visitCount);
+    visits += 1;
+    response.cookie('visitCount', visits);
+  }
+}
+
+// Check if the input date is the current date
+// As long as different date return True, assuming people dont go back in time
+function dateCheck(lastDate) {
+  const currentDate = new Date();
+  if (lastDate.day !== currentDate.getDate()
+    || lastDate.month !== currentDate.getMonth()
+    || lastDate.year !== currentDate.getYear()) {
+    return true;
+  }
+  return false;
+}

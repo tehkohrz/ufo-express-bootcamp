@@ -3,18 +3,26 @@
 <div class='titleHeader'>Edit Sighting <%=indexNo%></div>
 <div class="container">
   <form action='/sighting/<%=indexNo%>/edit?_method=PUT' method='POST'>
-    <% for (const [key,value] of Object.entries(sightingEntry)) { %>
-    <div class="form-group">
-      <label class='infoLabel col-4' for='<%=key%>'><%= key.toUpperCase().replace('_', ' ') %>:</label>
-      <% if(key === 'text' || key ==='summary') { %>
-        <textarea class ='infoInput col-12' rows="5"><%=value%></textarea>
-        <%} else { %>
-      <input class='infoInput col-12' type='text' id='<%=key%>' value='<%=value%>' />
-      <%}%>
+    <% for (const [key,value] of Object.entries(sightingTemplate)) {%>
+    <div class="row">
+      <label class='infoLabel' for="<%=key%>"> <%=value[0]%> </label>
+    </div>
+    <!-- Not a valid entry and needs to retain the input in the form -->
+    <div class="row">
+      <%  let inputValue = sightingEntry[key]; %>
+      <% if (key == 'summary'|| key == 'text') {%>
+      <textarea class='infoInput col-10' rows='5' id="<%=key%>" name="<%=key%>"><%=inputValue%></textarea>
+      <%} else {%>
+      <input class="infoInput col-10" type="<%=value[1]%>" id="<%=key%>" name="<%=key%>" value='<%=inputValue%>' />
+      <% } %>
     </div>
     <% } %>
-    <button class='entryButtons' type='submit'>Submit</button>
-    <button class ='entryButtons' type='submit' formaction="/sighting/<%=indexNo%>?_method=DELETE" formmethod= 'post'>Delete</button>
+    <% if(!(validInput)){%>
+    <h2 style="color: red;">Date not valid!</h2>
+    <%}%>
+    <button class='entryButtons' formaction='/sighting/<%=indexNo%>/edit?_method=PUT' type='submit'>Submit</button>
+    <button class='entryButtons' type='submit' formaction="/sighting/<%=indexNo%>?_method=DELETE"
+      formmethod='post'>Delete</button>
   </form>
 </div>
 </body>

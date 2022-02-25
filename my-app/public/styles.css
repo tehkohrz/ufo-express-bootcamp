@@ -2,12 +2,6 @@
   font-size: 50px;
 }
 
-.infoTitle {
-  font-size: 20px;
-  font-weight: bold;
-  text-decoration-line: underline;
-}
-
 .infoPara {
   color: brown;
 }
@@ -75,10 +69,13 @@ a:hover {
   color: black;
   border: none;
   font-weight: bold;
+  margin-top: 5px;
 }
 .infoTitle, .infoLabel {
   color: white;
   font-weight: bold;
+  margin:0;
+  padding: 5px;
 }
 .x-scroll-disabled {
 	overflow-x: hidden;
